@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: movie-backend
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - MONGODB_URI=mongodb+srv://mayank:Patel%403125@completecoding.5id4l6l.mongodb.net
+      - JWT_SECRET=mayank
+      - CLOUDINARY_NAME=dqfbpbt5u
+      - CLOUDINARY_API_KEY=668177182511438
+      - CLOUDINARY_SECRET_KEY=aGoClSZJxzzYVFgF5Uz5gN9Qs3M
+    networks:
+      - movie-network
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: movie-frontend
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - VITE_BACKEND_URL=http://localhost:3001
+    depends_on:
+      - backend
+    networks:
+      - movie-network
+
+networks:
+  movie-network:
+    driver: bridge
